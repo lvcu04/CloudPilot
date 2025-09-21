@@ -31,11 +31,7 @@ docker-compose.override.yml
 *.yaml~
 .kube/
 
-# CI/CD
-.github/
-.gitlab/
-*.bak
-*.swp
+
 
 # System files
 .DS_Store
