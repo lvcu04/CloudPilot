@@ -1,0 +1,12 @@
+# infra/k8s/postgres-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pgdata-pvc
+  namespace: autoops
+spec:
+  accessModes:
+    - ReadWriteOnce # Chỉ cho phép một node đọc/ghi tại một thời điểm
+  resources:
+    requests:
+      storage: 1Gi # Bạn có thể tăng dung lượng này tùy theo nhu cầu

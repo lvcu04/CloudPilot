@@ -1,0 +1,35 @@
+# infra/monitoring/values.yaml
+# File này dùng để ghi đè các giá trị mặc định của Helm chart kube-prometheus-stack
+
+grafana:
+  # Rất quan trọng: Đổi mật khẩu này thành một mật khẩu mạnh!
+  adminPassword: "your-strong-password-here"
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx # Giả định bạn đang dùng Nginx Ingress Controller
+    hosts:
+      - grafana.autoops.local # Tên miền để bạn truy cập vào Grafana
+    paths:
+      - /
+
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - prometheus.autoops.local # Tên miền để bạn truy cập vào Prometheus
+    paths:
+      - /
+
+# Tùy chỉnh khác (ví dụ: cấp phát tài nguyên)
+# Bạn có thể bỏ comment và chỉnh sửa nếu cần
+# prometheus:
+#   prometheusSpec:
+#     resources:
+#       requests:
+#         cpu: 200m
+#         memory: 512Mi
+#       limits:
+#         cpu: 500m
+#         memory: 1Gi

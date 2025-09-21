@@ -1,3 +1,4 @@
+# infra/k8s/sample-api-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,12 +18,20 @@ spec:
     spec:
       containers:
         - name: sample-api
-          image: ghcr.io/PLACEHOLDER_USER/sample-api:latest   # <-- đổi image theo registry bạn dùng
-          env:
-            - name: DATABASE_URL
-              value: postgresql://postgres:$(POSTGRES_PASSWORD)@postgres:5432/postgres
+          # QUAN TRỌNG: Thay thế bằng tên image của bạn trên registry
+          image: ghcr.io/your-username/your-repo:latest
           ports:
             - containerPort: 3000
+          env:
+            # Lấy mật khẩu từ Secret
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            # Xây dựng DATABASE_URL bằng biến vừa lấy được
+            - name: DATABASE_URL
+              value: "postgresql://postgres:$(POSTGRES_PASSWORD)@postgres.autoops.svc.cluster.local:5432/postgres"
           readinessProbe:
             httpGet:
               path: /
