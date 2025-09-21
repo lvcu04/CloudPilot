@@ -30,4 +30,4 @@ jobs:
           context: ./app
           push: true
           # Tên image này giờ sẽ hoạt động vì đã có DOCKERHUB_USERNAME
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/cloudpilot:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/cloudpilot:latest
