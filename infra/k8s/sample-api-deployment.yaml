@@ -19,7 +19,7 @@ spec:
       containers:
         - name: sample-api
           # QUAN TRỌNG: Thay thế bằng tên image của bạn trên registry
-          image: ghcr.io/your-username/your-repo:latest
+          image: levancu09/cloudpilot:latest
           ports:
             - containerPort: 3000
           env:
@@ -31,7 +31,7 @@ spec:
                   key: password
             # Xây dựng DATABASE_URL bằng biến vừa lấy được
             - name: DATABASE_URL
-              value: "postgresql://postgres:$(POSTGRES_PASSWORD)@postgres.autoops.svc.cluster.local:5432/postgres"
+              value: "postgresql://postgres:password@cloudpilot:5432/postgres"
           readinessProbe:
             httpGet:
               path: /
