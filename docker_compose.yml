@@ -1,15 +1,17 @@
-version: "3.8"
 services:
   app:
     build: ./app
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/postgres
+      # Sửa hostname ở đây
+      - DATABASE_URL=postgresql://postgres:password@cloudpilot:5432/postgres
     depends_on:
-      - postgres
+      # Sửa tên service phụ thuộc ở đây
+      - cloudpilot
 
-  postgres:
+  # Sửa tên service ở đây
+  cloudpilot:
     image: postgres:15-alpine
     environment:
       POSTGRES_PASSWORD: password
