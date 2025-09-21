@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup
+  namespace: autoops
+spec:
+  schedule: "0 2 * * *" # mỗi ngày 02:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: alpine:3.18
+              env:
+                - name: PGHOST
+                  value: postgres.autoops.svc.cluster.local
+                - name: PGUSER
+                  value: postgres
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-secret
+                      key: password
+                - name: RESTIC_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: restic-credentials
+                      key: RESTIC_PASSWORD
+                - name: RESTIC_REPOSITORY
+                  valueFrom:
+                    secretKeyRef:
+                      name: restic-credentials
+                      key: RESTIC_REPOSITORY
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: restic-credentials
+                      key: AWS_ACCESS_KEY_ID
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: restic-credentials
+                      key: AWS_SECRET_ACCESS_KEY
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+                  apk add --no-cache postgresql-client curl restic
+                  TIMESTAMP=$(date -u +%Y%m%dT%H%M%SZ)
+                  mkdir -p /tmp/backup
+                  echo "Dumping Postgres DB..."
+                  pg_dump -h "$PGHOST" -U "$PGUSER" -F c -d postgres -f /tmp/backup/postgres-$TIMESTAMP.dump
+                  echo "Backing up with restic..."
+                  restic --repo $RESTIC_REPOSITORY --password-env RESTIC_PASSWORD backup /tmp/backup
+                  restic --repo $RESTIC_REPOSITORY --password-env RESTIC_PASSWORD forget --keep-daily 7 --keep-weekly 4 --keep-monthly 12 --prune
+              volumeMounts: []

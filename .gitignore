@@ -1,0 +1,47 @@
+# Node.js / React / Vue / Angular (nếu có dùng frontend/backend Node.js)
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+build/
+.env
+.env.local
+.env.*.local
+
+# Python (nếu có service bằng Python)
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+*.pytest_cache/
+*.mypy_cache/
+.venv/
+
+# Logs
+*.log
+logs/
+*.out
+*.pid
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Kubernetes
+*.yaml~
+.kube/
+
+# CI/CD
+.github/
+.gitlab/
+*.bak
+*.swp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Backup files
+backup/
+*.tar.gz
+*.zip

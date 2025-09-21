@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-api
+  namespace: autoops
+  labels:
+    app: sample-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sample-api
+  template:
+    metadata:
+      labels:
+        app: sample-api
+    spec:
+      containers:
+        - name: sample-api
+          image: ghcr.io/PLACEHOLDER_USER/sample-api:latest   # <-- đổi image theo registry bạn dùng
+          env:
+            - name: DATABASE_URL
+              value: postgresql://postgres:$(POSTGRES_PASSWORD)@postgres:5432/postgres
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 20
