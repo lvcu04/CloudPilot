@@ -5,6 +5,8 @@ const { Pool } = require('pg');
 const app = express();
 app.use(express.json());
 
+app.use(express.static('src/public'));
+
 const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres:password@cloudpilot:5432/postgres';
 
 const pool = new Pool({
