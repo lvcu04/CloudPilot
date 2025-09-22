@@ -7,7 +7,7 @@ app.use(express.json());
 
 app.use(express.static('src/public'));
 
-const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres:password@cloudpilot:5432/postgres';
+const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres:password@postgres:5432/postgres';
 
 const pool = new Pool({
   connectionString: DATABASE_URL,

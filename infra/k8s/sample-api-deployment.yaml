@@ -31,7 +31,7 @@ spec:
                   key: password
             # Xây dựng DATABASE_URL bằng biến vừa lấy được
             - name: DATABASE_URL
-              value: "postgresql://postgres:password@cloudpilot:5432/postgres"
+              value: "postgresql://postgres:password@postgres:5432/postgres"
           readinessProbe:
             httpGet:
               path: /

@@ -5,16 +5,16 @@ services:
       - "3000:3000"
     environment:
       # Sửa hostname ở đây
-      - DATABASE_URL=postgresql://postgres:password@cloudpilot:5432/postgres
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/postgres
     depends_on:
       # Sửa tên service phụ thuộc ở đây
-      - cloudpilot
+      - postgres
 
   # Sửa tên service ở đây
-  cloudpilot:
+  postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_PASSWORD: password
+      POSTG-RES_PASSWORD: password
       POSTGRES_DB: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
