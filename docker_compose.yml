@@ -14,7 +14,7 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTG-RES_PASSWORD: password
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
