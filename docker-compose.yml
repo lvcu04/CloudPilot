@@ -1,0 +1,47 @@
+services:
+  app:
+    build: ./app # Có sẵn trong dockerFile
+    # image: levancu09/cloudpilot:latest lấy từ docker hub
+    ports:
+      - "3000:3000"
+    environment:
+      # Sửa hostname ở đây
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/postgres
+    depends_on:
+      # Sửa tên service phụ thuộc ở đây
+      - postgres
+
+  # Sửa tên service ở đây
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
+
+deploy-to-k8s:
+  runs-on: ubuntu-latest
+  needs: build-and-push # Chạy sau khi build xong
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Kubeconfig
+      uses: azure/k8s-set-context@v4
+      with:
+        # Lưu nội dung file kubeconfig của bạn vào GitHub Secrets
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG }} 
+
+    - name: Deploy new image to Kubernetes
+      run: |
+        echo "Updating deployment with the latest image..."
+        kubectl -n autoops set image deployment/sample-api sample-api=${{ secrets.DOCKER_USERNAME }}/cloudpilot:latest
+        echo "Rollout deployment..."
+        kubectl -n autoops rollout status deployment/sample-api

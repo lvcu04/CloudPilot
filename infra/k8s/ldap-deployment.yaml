@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  namespace: autoops
+  labels:
+    app: openldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      containers:
+        - name: openldap
+          image: osixia/openldap:1.5.0
+          ports:
+            - containerPort: 389
+            - containerPort: 636
+          env:
+            - name: LDAP_ORGANISATION
+              value: "AutoOps Inc"
+            - name: LDAP_DOMAIN
+              value: "autoops.local"
+            - name: LDAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openldap-secret
+                  key: LDAP_ADMIN_PASSWORD
+          volumeMounts:
+            - name: ldap-data
+              mountPath: /var/lib/ldap
+            - name: ldap-config
+              mountPath: /etc/ldap/slapd.d
+      volumes:
+        - name: ldap-data
+          persistentVolumeClaim:
+            claimName: openldap-data-pvc
+        - name: ldap-config
+          persistentVolumeClaim:
+            claimName: openldap-data-pvc # Có thể dùng chung hoặc tạo PVC riêng
